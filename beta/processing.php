@@ -1,5 +1,5 @@
 <?php
-include "administrator/payments/config.php";
+include "config.php";
 
 if(isset($_GET["ACTION_CODE"]))
 {
