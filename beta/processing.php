@@ -1,5 +1,5 @@
 <?php
-include "config.php";
+include "administrator/payments/config.php";
 
 if(isset($_GET["ACTION_CODE"]))
 {
@@ -27,10 +27,10 @@ if(isset($_GET["ACTION_CODE"]))
 				if($key=="amount")
 				{
 					$value/=100;	
-				}
+				}	
 				$massage.=$key.":".$value."<br>";
 			}
-			
+				
 		}
 
 		//echo "$subject<br>";
@@ -38,7 +38,7 @@ if(isset($_GET["ACTION_CODE"]))
 
 		mysqli_close($con);
 	
-		mail($adminmail, $subject, $massage,"MIME-Version: 1.0\r\nContent-Type: text/html; charset=utf-8\r\n");
+		mail($adminmail, $subject, $massage, "$adminmail\r\nMIME-Version: 1.0\r\nContent-Type: text/html; charset=utf-8\r\n");
 
 	}
 	else
@@ -76,10 +76,14 @@ if(isset($_GET['p']) && $_GET['p']!="")
 
 		if($AMOUNT>0 && $ORDERNUMBER>0)
 		{
-			$url=$baseURL."Merchant2Rbs?MERCHANTNUMBER=$MERCHANTNUMBER&ORDERNUMBER=$ORDERNUMBER&AMOUNT=$AMOUNT&DEPOSITFLAG=$DEPOSITFLAG&BACKURL=$BACKURL$ORDERNUMBER&".'$ORDERDESCRIPTION'."=$ORDERDESCRIPTION&LANGUAGE=$LANGUAGE&MERCHANTPASSWD=$MERCHANTPASSWD";
-			header("location: ".$url);
-			exit;
-			echo "<a target='_blank' href='$url'>click</a>";
+			$url=$baseURL."Merchant2Rbs?MERCHANTNUMBER=$MERCHANTNUMBER&ORDERNUMBER=$ORDERNUMBER&AMOUNT=$AMOUNT&DEPOSITFLAG=$DEPOSITFLAG&BACKURL=$BACKURL$ORDERNUMBER&".'$ORDERDESCRIPTION'."=$ORDERDESCRIPTION&LANGUAGE=$LANGUAGE&MERCHANTPASSWD=$MERCHANTPASSWD&MODE=1";
+			$orderIDatARCA = file_get_contents($url);
+			//echo $orderIDatARCA;
+			
+			$payurl="$baseURL/BPC/AcceptPayment.jsp?MDORDER=$orderIDatARCA"; 
+			header("location: ".$payurl);
+			//exit;
+			//echo "<a target='_blank' href='$url'>click</a>";
 			/*
 			$url = $baseURL."Merchant2Rbs";
 			$params = array('MERCHANTNUMBER'=>$MERCHANTNUMBER
